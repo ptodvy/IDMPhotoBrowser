@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15DD570C1ED7CF5C00B5CE32 /* photo-gif.gif in Resources */ = {isa = PBXBuildFile; fileRef = 15DD570B1ED7CF5C00B5CE32 /* photo-gif.gif */; };
 		4C6F979214AF734900F8389A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C6F979114AF734900F8389A /* UIKit.framework */; };
 		4C6F979414AF734900F8389A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C6F979314AF734900F8389A /* Foundation.framework */; };
 		4C6F979614AF734900F8389A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C6F979514AF734900F8389A /* CoreGraphics.framework */; };
@@ -55,6 +56,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		15DD570B1ED7CF5C00B5CE32 /* photo-gif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "photo-gif.gif"; sourceTree = "<group>"; };
 		4C6F978D14AF734900F8389A /* PhotoBrowserDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoBrowserDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6F979114AF734900F8389A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4C6F979314AF734900F8389A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -209,6 +211,7 @@
 		4C6F97CA14AF75D300F8389A /* Sample Photos */ = {
 			isa = PBXGroup;
 			children = (
+				15DD570B1ED7CF5C00B5CE32 /* photo-gif.gif */,
 				4C6F97CB14AF760500F8389A /* photo1l.jpg */,
 				4C6F97CC14AF760500F8389A /* photo1m.jpg */,
 				4C6F97CD14AF760500F8389A /* photo2l.jpg */,
@@ -344,6 +347,7 @@
 				4C6F97D814AF760500F8389A /* photo3m.jpg in Resources */,
 				D172B93B1DF396E300F56D69 /* IDMPhotoBrowser_customArrowLeftSelected.png in Resources */,
 				4C6F97D914AF760500F8389A /* photo4l.jpg in Resources */,
+				15DD570C1ED7CF5C00B5CE32 /* photo-gif.gif in Resources */,
 				D172B93E1DF396E300F56D69 /* IDMPhotoBrowser_customArrowRight@2x.png in Resources */,
 				4C6F97DA14AF760500F8389A /* photo4m.jpg in Resources */,
 				D157496A178DB94900B0211A /* IDMPhotoBrowser.bundle in Resources */,

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "IDMPBConstants.h"
+#import <SDWebImage/FLAnimatedImageView+WebCache.h>
 
 // Name of notification used when a photo has completed loading process
 // Used to notify browser display the image
@@ -51,6 +52,12 @@
 // as long as the image can be re-loaded (from cache, file, or URL)
 - (void)unloadUnderlyingImage;
 
+- (FLAnimatedImage *)animatedImage;
+
+- (UIImage *)imageIfLoaded;
+
+- (FLAnimatedImage *)animatedImageIfLoaded;
+    
 @optional
 
 // Return a caption string to be displayed over the image
