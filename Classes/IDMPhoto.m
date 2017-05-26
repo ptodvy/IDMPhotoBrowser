@@ -8,13 +8,15 @@
 
 #import "IDMPhoto.h"
 #import "IDMPhotoBrowser.h"
+#import <SDWebImage/UIImage+MultiFormat.h>
+#import <SDWebImage/UIImage+GIF.h>
 
 // Private
 @interface IDMPhoto () {
-    // Image Sources
+// Image Sources
     NSString *_photoPath;
 
-    // Image
+// Image
     UIImage *_underlyingImage;
 
     // Other
@@ -24,7 +26,8 @@
 
 // Properties
 @property (nonatomic, strong) UIImage *underlyingImage;
-
+@property (nonatomic, strong) FLAnimatedImage *animatedImage;
+    
 // Methods
 - (void)imageLoadingComplete;
 
@@ -124,10 +127,14 @@ caption = _caption;
     return _underlyingImage;
 }
 
+- (FLAnimatedImage *)animatedImage {
+    return _animatedImage;
+}
+
 - (void)loadUnderlyingImageAndNotify {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     _loadingInProgress = YES;
-    if (self.underlyingImage) {
+    if (self.underlyingImage || self.animatedImage) {
         // Image already loaded
         [self imageLoadingComplete];
     } else {
@@ -143,15 +150,23 @@ caption = _caption;
 				if (self.progressUpdateBlock) {
 					self.progressUpdateBlock(progress);
 				}
-			} completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-				if (image) {
-					self.underlyingImage = image;
-				}
-				
-				[self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
-			}];
+            } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+                
+                if ([image isGIF]) {
+                    self.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+                    self.underlyingImage = nil;
+                } else {
+                    self.underlyingImage = image;
+                    self.animatedImage = nil;
+                }
+                
+                if (image) {
+                    [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
+                }
+            }];
         } else {
             // Failed - no source
+            self.animatedImage = nil;
             self.underlyingImage = nil;
             [self imageLoadingComplete];
         }
@@ -162,45 +177,13 @@ caption = _caption;
 - (void)unloadUnderlyingImage {
     _loadingInProgress = NO;
 
-	if (self.underlyingImage && (_photoPath || _photoURL)) {
+	if ((self.underlyingImage || self.animatedImage) && (_photoPath || _photoURL)) {
+        self.animatedImage = nil;
 		self.underlyingImage = nil;
 	}
 }
 
 #pragma mark - Async Loading
-
-/*- (UIImage *)decodedImageWithImage:(UIImage *)image {
-    CGImageRef imageRef = image.CGImage;
-    // System only supports RGB, set explicitly and prevent context error
-    // if the downloaded image is not the supported format
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    
-    CGContextRef context = CGBitmapContextCreate(NULL,
-                                                 CGImageGetWidth(imageRef),
-                                                 CGImageGetHeight(imageRef),
-                                                 8,
-                                                 // width * 4 will be enough because are in ARGB format, don't read from the image
-                                                 CGImageGetWidth(imageRef) * 4,
-                                                 colorSpace,
-                                                 // kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little
-                                                 // makes system don't need to do extra conversion when displayed.
-                                                 kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
-    CGColorSpaceRelease(colorSpace);
-    
-    if ( ! context) {
-        return nil;
-    }
-    
-    CGRect rect = (CGRect){CGPointZero, CGImageGetWidth(imageRef), CGImageGetHeight(imageRef)};
-    CGContextDrawImage(context, rect, imageRef);
-    CGImageRef decompressedImageRef = CGBitmapContextCreateImage(context);
-    CGContextRelease(context);
-    
-    UIImage *decompressedImage = [[UIImage alloc] initWithCGImage:decompressedImageRef];
-    CGImageRelease(decompressedImageRef);
-    return decompressedImage;
-}*/
-
 - (UIImage *)decodedImageWithImage:(UIImage *)image {
     if (image.images) {
         // Do not decode animated images
@@ -265,13 +248,24 @@ caption = _caption;
 - (void)loadImageFromFileAsync {
     @autoreleasepool {
         @try {
-            self.underlyingImage = [UIImage imageWithContentsOfFile:_photoPath];
-            if (!_underlyingImage) {
-                //IDMLog(@"Error loading photo from path: %@", _photoPath);
+            NSData *data = [[NSFileManager defaultManager] contentsAtPath:_photoPath];
+            UIImage *image = [UIImage sd_imageWithData:data];
+            
+            if ([image isGIF]) {
+                self.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+                self.underlyingImage = nil;
+            } else {
+                self.underlyingImage = image;
+                self.animatedImage = nil;
             }
         } @finally {
-            self.underlyingImage = [self decodedImageWithImage: self.underlyingImage];
-            [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
+            if (_underlyingImage) {
+                self.underlyingImage = [self decodedImageWithImage: self.underlyingImage];
+            }
+            
+            if (_underlyingImage || self.animatedImage) {
+                [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
+            }
         }
     }
 }
@@ -283,6 +277,31 @@ caption = _caption;
     _loadingInProgress = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:IDMPhoto_LOADING_DID_END_NOTIFICATION
                                                         object:self];
+}
+
+- (UIImage *)imageIfLoaded {
+    // Get image or obtain in background
+    if ([self underlyingImage]) {
+        return [self underlyingImage];
+    } else if (![self animatedImage]) {
+        [self loadUnderlyingImageAndNotify];
+        if ([self respondsToSelector:@selector(placeholderImage)]) {
+            return [self placeholderImage];
+        }
+    }
+    
+    return nil;
+}
+
+- (FLAnimatedImage *)animatedImageIfLoaded {
+    // Get image or obtain in background
+    if ([self animatedImage]) {
+        return [self animatedImage];
+    } else if (![self underlyingImage]) {
+        [self loadUnderlyingImageAndNotify];
+    }
+    
+    return nil;
 }
 
 @end

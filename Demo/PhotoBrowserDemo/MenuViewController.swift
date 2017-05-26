@@ -30,10 +30,10 @@ extension MenuViewController {
 
 extension MenuViewController {
 	func setupTableViewFooterView() {
-		let tableViewFooter: UIView = UIView(frame: CGRect.init(x: 0, y: 0, width: 320, height: 426 * 0.9 + 40))
+		let tableViewFooter: UIView = UIView(frame: CGRect.init(x: 0, y: 0, width: 320, height: 639 * 0.9 + 60))
 		
 		let buttonWithImageOnScreen1 = UIButton(type: .custom)
-		buttonWithImageOnScreen1.frame = CGRect.init(x: 15, y: 0, width: 640/3 * 0.9, height: 426/2 * 0.9)
+		buttonWithImageOnScreen1.frame = CGRect.init(x: 15, y: 0, width: 640/3 * 0.9, height: 639/3 * 0.9)
 		buttonWithImageOnScreen1.tag = 101
 		buttonWithImageOnScreen1.adjustsImageWhenHighlighted = false
 		buttonWithImageOnScreen1.setImage(UIImage.init(named: "photo1m.jpg"), for: .normal)
@@ -43,7 +43,7 @@ extension MenuViewController {
 		tableViewFooter.addSubview(buttonWithImageOnScreen1)
 		
 		let buttonWithImageOnScreen2 = UIButton(type: .custom)
-		buttonWithImageOnScreen2.frame = CGRect.init(x: 15, y: 426/2 * 0.9 + 20, width: 640/3 * 0.9, height: 426/2 * 0.9)
+		buttonWithImageOnScreen2.frame = CGRect.init(x: 15, y: 639/3 * 0.9 + 20, width: 640/3 * 0.9, height: 639/3 * 0.9)
 		buttonWithImageOnScreen2.tag = 102
 		buttonWithImageOnScreen2.adjustsImageWhenHighlighted = false
 		buttonWithImageOnScreen2.setImage(UIImage.init(named: "photo3m.jpg"), for: .normal)
@@ -52,6 +52,16 @@ extension MenuViewController {
 		buttonWithImageOnScreen2.addTarget(self, action: #selector(buttonWithImageOnScreenPressed(sender:)), for: .touchUpInside)
 		tableViewFooter.addSubview(buttonWithImageOnScreen2)
 		
+        let buttonWithImageOnScreen3 = UIButton(type: .custom)
+        buttonWithImageOnScreen3.frame = CGRect.init(x: 15, y: (639/3 * 0.9 + 20) * 2, width: 640/3 * 0.9, height: 639/3 * 0.9)
+        buttonWithImageOnScreen3.tag = 103
+        buttonWithImageOnScreen3.adjustsImageWhenHighlighted = false
+        buttonWithImageOnScreen3.setImage(UIImage.init(named: "photo-gif.gif"), for: .normal)
+        buttonWithImageOnScreen3.imageView?.contentMode = .scaleAspectFill
+        buttonWithImageOnScreen3.backgroundColor = UIColor.black
+        buttonWithImageOnScreen3.addTarget(self, action: #selector(buttonWithImageOnScreenPressed(sender:)), for: .touchUpInside)
+        tableViewFooter.addSubview(buttonWithImageOnScreen3)
+        
 		self.tableView.tableFooterView = tableViewFooter;
 	}
 }
@@ -72,7 +82,12 @@ extension MenuViewController {
 			photo = IDMPhoto.photos(withFilePaths:path_photo1l).first as! IDMPhoto
 			photo.caption = "Grotto of the Madonna"
 			photos.append(photo)
-		}
+        } else if buttonSender?.tag == 103 {
+            let path_photo1l = [Bundle.main.path(forResource: "photo-gif", ofType: "gif")]
+            photo = IDMPhoto.photos(withFilePaths:path_photo1l).first as! IDMPhoto
+            photo.caption = "Animated gif from web"
+            photos.append(photo)
+        }
 		
 		let path_photo3l = [Bundle.main.path(forResource: "photo3l", ofType: "jpg")]
 		photo = IDMPhoto.photos(withFilePaths:path_photo3l).first as! IDMPhoto
@@ -121,7 +136,7 @@ extension MenuViewController {
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		switch section {
 		case 0:
-			return 1
+			return 2
 		case 1:
 			return 3
 		case 2:
@@ -153,9 +168,11 @@ extension MenuViewController {
 		}
 		
 		// Configure
-		if indexPath.section == 0 {
+		if indexPath.section == 0 && indexPath.row == 0 {
 			cell?.textLabel?.text = "Local photo"
-		} else if indexPath.section == 1 {
+        } else if indexPath.section == 0 && indexPath.row == 1 {
+            cell?.textLabel?.text = "Animated gif from web"
+        } else if indexPath.section == 1 {
 			switch indexPath.row {
 			case 0:
 				cell?.textLabel?.text = "Local photos"
@@ -183,12 +200,18 @@ extension MenuViewController {
 		
 		var photo: IDMPhoto
 		
-		if indexPath.section == 0 { // Local photo
+		if indexPath.section == 0 && indexPath.row == 0 { // Local photo
 			let path_photo2l = [Bundle.main.path(forResource: "photo2l", ofType: "jpg")]
 			photo = IDMPhoto.photos(withFilePaths:path_photo2l).first as! IDMPhoto
 			photo.caption = "The London Eye is a giant Ferris wheel situated on the banks of the River Thames, in London, England."
 			photos.append(photo)
 		}
+        else if indexPath.section == 0 && indexPath.row == 1 { // animated gif from web
+            let photosWithURLArray = [NSURL.init(string: "http://cfile285.uf.daum.net/image/25320C4759017D9C06710B")]
+            let photosWithURL: [IDMPhoto] = IDMPhoto.photos(withURLs: photosWithURLArray) as! [IDMPhoto]
+            
+            photos = photosWithURL
+        }
 		else if indexPath.section == 1 { // Multiple photos
 			if indexPath.row == 0 { // Local Photos
 				
@@ -219,7 +242,7 @@ extension MenuViewController {
 				let photosWithURL: [IDMPhoto] = IDMPhoto.photos(withURLs: photosWithURLArray) as! [IDMPhoto]
 				
 				photos = photosWithURL
-			}
+            }
 		}
 
 		// Create and setup browser

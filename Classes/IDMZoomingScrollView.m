@@ -106,7 +106,9 @@
 		self.contentSize = CGSizeMake(0, 0);
 		
 		// Get image from browser as it handles ordering of fetching
-		UIImage *img = [self.photoBrowser imageForPhoto:_photo];
+        UIImage *img = [_photo imageIfLoaded];
+        FLAnimatedImage *animatedImage = [_photo animatedImageIfLoaded];
+        
 		if (img) {
             // Hide ProgressView
             //_progressView.alpha = 0.0f;
@@ -126,6 +128,25 @@
 
 			// Set zoom to minimum zoom
 			[self setMaxMinZoomScalesForCurrentBounds];
+        } else if (animatedImage) {
+            // Hide ProgressView
+            //_progressView.alpha = 0.0f;
+            [_progressView removeFromSuperview];
+            
+            // Set image
+            _photoImageView.animatedImage = animatedImage;
+            _photoImageView.hidden = NO;
+            
+            // Setup photo frame
+            CGRect photoImageViewFrame;
+            photoImageViewFrame.origin = CGPointZero;
+            photoImageViewFrame.size = animatedImage.size;
+            
+            _photoImageView.frame = photoImageViewFrame;
+            self.contentSize = photoImageViewFrame.size;
+            
+            // Set zoom to minimum zoom
+            [self setMaxMinZoomScalesForCurrentBounds];
         } else {
 			// Hide image view
 			_photoImageView.hidden = YES;
