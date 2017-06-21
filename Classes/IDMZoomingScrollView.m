@@ -58,7 +58,7 @@
         }
         
         // Progress view
-        _progressView = [[DACircularProgressView alloc] initWithFrame:CGRectMake((screenWidth-35.)/2., (screenHeight-35.)/2, 35.0f, 35.0f)];
+        _progressView = [[DACircularProgressView alloc] initWithFrame:CGRectMake((screenWidth-35.)/2., (screenHeight-35.)/2, 28.0f, 28.0f)];
         [_progressView setProgress:0.0f];
         _progressView.tag = 101;
         _progressView.thicknessRatio = 0.1;
