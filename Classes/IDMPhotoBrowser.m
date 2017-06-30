@@ -1212,14 +1212,18 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     }
 
     // Hide/show bars
-    [UIView animateWithDuration:(animated ? 0.1 : 0) animations:^(void) {
-        CGFloat alpha = hidden ? 0 : 1;
-        [self.navigationController.navigationBar setAlpha:alpha];
-        [_toolbar setAlpha:alpha];
-        [_doneButton setAlpha:alpha];
-        for (UIView *v in captionViews) v.alpha = alpha;
-    } completion:^(BOOL finished) {}];
-
+    
+    if ([_delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
+        [_delegate setControlsHidden:hidden animated:(BOOL)animated];
+    } else {
+        [UIView animateWithDuration:(animated ? 0.1 : 0) animations:^(void) {
+            CGFloat alpha = hidden ? 0 : 1;
+            [self.navigationController.navigationBar setAlpha:alpha];
+            [_toolbar setAlpha:alpha];
+            [_doneButton setAlpha:alpha];
+            for (UIView *v in captionViews) v.alpha = alpha;
+        } completion:^(BOOL finished) {}];
+    }
 	// Control hiding timer
 	// Will cancel existing timer but only begin hiding if they are visible
 	if (!permanent) {
@@ -1250,6 +1254,10 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 }
 
 - (BOOL)areControlsHidden {
+    if ([_delegate respondsToSelector:@selector(areControlsHidden)]) {
+        return [_delegate areControlsHidden];
+    }
+    
 	return (_toolbar.alpha == 0);
 }
 
