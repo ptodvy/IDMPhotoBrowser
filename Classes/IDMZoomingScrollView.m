@@ -312,7 +312,10 @@
 		
 		// Zoom out
 		[self setZoomScale:self.minimumZoomScale animated:YES];
-		
+        
+        if ([_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
+            [_photoBrowser.delegate setControlsHidden:NO animated:YES];
+        }
 	} else {
 		
 		// Zoom in
@@ -321,10 +324,16 @@
 		
 		[self zoomToRect:CGRectMake(targetPoint.x, targetPoint.y, targetSize.width, targetSize.height) animated:YES];
 		
+        if ([_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
+            [_photoBrowser.delegate setControlsHidden:YES animated:YES];
+        }
 	}
 	
 	// Delay controls
-	[_photoBrowser hideControlsAfterDelay];
+    
+    if (![_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
+        [_photoBrowser hideControlsAfterDelay];
+    }
 }
 
 // Image View

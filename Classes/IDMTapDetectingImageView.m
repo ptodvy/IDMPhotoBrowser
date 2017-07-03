@@ -49,7 +49,7 @@
 		default:
 			break;
 	}
-	[super touchesEnded:touches withEvent:event];
+    [[self nextResponder] touchesEnded:touches withEvent:event];
 }
 
 - (void)handleSingleTap:(UITouch *)touch {

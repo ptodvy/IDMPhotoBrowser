@@ -352,6 +352,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             [UIView setAnimationDelegate:self];
             [scrollView setCenter:CGPointMake(finalX, finalY)];
             [UIView commitAnimations];
+            
+            [self setControlsHidden:NO animated:YES permanent:YES];
         }
     }
 }
