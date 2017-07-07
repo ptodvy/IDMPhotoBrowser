@@ -29,6 +29,9 @@
 
 - (BOOL)areControlsHidden;
 - (void)setControlsHidden:(BOOL)hidden animated:(BOOL)animated;
+- (void)startDraggingPhoto;
+- (void)stopDraggingPhoto;
+
 
 @end
 

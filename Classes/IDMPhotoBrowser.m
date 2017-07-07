@@ -289,6 +289,11 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         _senderViewForAnimation.hidden = (_currentPageIndex == _initalPageIndex);
 
         _isdraggingPhoto = YES;
+        
+        if ([_delegate respondsToSelector:@selector(startDraggingPhoto)]) {
+            [_delegate startDraggingPhoto];
+        }
+        
         [self setNeedsStatusBarAppearanceUpdate];
     }
 
@@ -335,6 +340,11 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         else // Continue Showing View
         {
             _isdraggingPhoto = NO;
+            
+            if ([_delegate respondsToSelector:@selector(stopDraggingPhoto)]) {
+                [_delegate stopDraggingPhoto];
+            }
+            
             [self setNeedsStatusBarAppearanceUpdate];
 
             self.view.backgroundColor = [UIColor colorWithWhite:(_useWhiteBackgroundColor ? 1 : 0) alpha:1];
