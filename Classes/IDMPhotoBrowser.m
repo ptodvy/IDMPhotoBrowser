@@ -415,13 +415,13 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
     float fadeAlpha = 1 - fabs(scrollView.frame.origin.y)/scrollView.frame.size.height;
 
-    UIImage *imageFromView = [scrollView.photo underlyingImage];
-    if (!imageFromView && [scrollView.photo animatedImage]) {
-        imageFromView = [scrollView.photo animatedImage].posterImage;
+    UIImage *imageFromView = [scrollView.photo underlyingImage].image;
+    if (!imageFromView && [scrollView.photo underlyingImage].animatedImage) {
+        imageFromView = [scrollView.photo underlyingImage].animatedImage.posterImage;
     }
     
     if (!imageFromView && [scrollView.photo respondsToSelector:@selector(placeholderImage)]) {
-        imageFromView = [scrollView.photo placeholderImage];
+        imageFromView = [scrollView.photo placeholderImage].image;
     }
 
     UIView *fadeView = [[UIView alloc] initWithFrame:_applicationWindow.bounds];
@@ -908,7 +908,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             if (pageIndex > 0) {
                 // Preload index - 1
                 id <IDMPhoto> photo = [self photoAtIndex:pageIndex-1];
-                if (![photo underlyingImage] && ![photo animatedImage]) {
+                if (![photo underlyingImage]) {
                     [photo loadUnderlyingImageAndNotify];
                     IDMLog(@"Pre-loading image at index %i", pageIndex-1);
                 }
@@ -916,7 +916,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             if (pageIndex < [self numberOfPhotos] - 1) {
                 // Preload index + 1
                 id <IDMPhoto> photo = [self photoAtIndex:pageIndex+1];
-                if (![photo underlyingImage] && ![photo animatedImage]) {
+                if (![photo underlyingImage]) {
                     [photo loadUnderlyingImageAndNotify];
                     IDMLog(@"Pre-loading image at index %i", pageIndex+1);
                 }
@@ -931,7 +931,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     id <IDMPhoto> photo = [notification object];
     IDMZoomingScrollView *page = [self pageDisplayingPhoto:photo];
     if (page) {
-        if ([photo underlyingImage] || [photo animatedImage]) {
+        if ([photo underlyingImage]) {
             // Successful load
             [page displayImage];
             [self loadAdjacentPhotosIfNecessary:photo];
@@ -1051,7 +1051,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     // Load adjacent images if needed and the photo is already
     // loaded. Also called after photo has been loaded in background
     id <IDMPhoto> currentPhoto = [self photoAtIndex:index];
-    if ([currentPhoto underlyingImage] || [currentPhoto animatedImage]) {
+    if ([currentPhoto underlyingImage]) {
         // photo loaded so load ajacent now
         [self loadAdjacentPhotosIfNecessary:currentPhoto];
     }
