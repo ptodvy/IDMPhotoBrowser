@@ -17,7 +17,7 @@
     NSString *_photoPath;
 
 // Image
-    UIImage *_underlyingImage;
+    IDMPhotoImage *_underlyingImage;
 
     // Other
     NSString *_caption;
@@ -25,8 +25,7 @@
 }
 
 // Properties
-@property (nonatomic, strong) UIImage *underlyingImage;
-@property (nonatomic, strong) FLAnimatedImage *animatedImage;
+@property (nonatomic, strong) IDMPhotoImage *underlyingImage;
     
 // Methods
 - (void)imageLoadingComplete;
@@ -102,7 +101,10 @@ caption = _caption;
 
 - (id)initWithImage:(UIImage *)image {
 	if ((self = [super init])) {
-		self.underlyingImage = image;
+        IDMPhotoImage *photoImage = [[IDMPhotoImage alloc] init];
+        photoImage.image = image;
+        
+		self.underlyingImage = photoImage;
 	}
 	return self;
 }
@@ -123,18 +125,14 @@ caption = _caption;
 
 #pragma mark IDMPhoto Protocol Methods
 
-- (UIImage *)underlyingImage {
+- (IDMPhotoImage *)underlyingImage {
     return _underlyingImage;
-}
-
-- (FLAnimatedImage *)animatedImage {
-    return _animatedImage;
 }
 
 - (void)loadUnderlyingImageAndNotify {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     _loadingInProgress = YES;
-    if (self.underlyingImage || self.animatedImage) {
+    if (self.underlyingImage) {
         // Image already loaded
         [self imageLoadingComplete];
     } else {
@@ -152,12 +150,14 @@ caption = _caption;
 				}
             } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
                 
+                self.underlyingImage = [[IDMPhotoImage alloc] init];
+                
                 if ([image isGIF]) {
-                    self.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
-                    self.underlyingImage = nil;
+                    self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+                    self.underlyingImage.image = nil;
                 } else {
-                    self.underlyingImage = image;
-                    self.animatedImage = nil;
+                    self.underlyingImage.animatedImage = nil;
+                    self.underlyingImage.image = image;
                 }
                 
                 if (image) {
@@ -166,7 +166,6 @@ caption = _caption;
             }];
         } else {
             // Failed - no source
-            self.animatedImage = nil;
             self.underlyingImage = nil;
             [self imageLoadingComplete];
         }
@@ -177,9 +176,8 @@ caption = _caption;
 - (void)unloadUnderlyingImage {
     _loadingInProgress = NO;
 
-	if ((self.underlyingImage || self.animatedImage) && (_photoPath || _photoURL)) {
-        self.animatedImage = nil;
-		self.underlyingImage = nil;
+	if (self.underlyingImage && (_photoPath || _photoURL)) {
+        self.underlyingImage = nil;
 	}
 }
 
@@ -251,19 +249,23 @@ caption = _caption;
             NSData *data = [[NSFileManager defaultManager] contentsAtPath:_photoPath];
             UIImage *image = [UIImage sd_imageWithData:data];
             
-            if ([image isGIF]) {
-                self.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
-                self.underlyingImage = nil;
-            } else {
-                self.underlyingImage = image;
-                self.animatedImage = nil;
+            if (image) {
+                self.underlyingImage = [[IDMPhotoImage alloc] init];
+                
+                if ([image isGIF]) {
+                    self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+                    self.underlyingImage.image = nil;
+                } else {
+                    self.underlyingImage.animatedImage = nil;
+                    self.underlyingImage.image = image;
+                }
             }
         } @finally {
-            if (_underlyingImage) {
-                self.underlyingImage = [self decodedImageWithImage: self.underlyingImage];
+            if (_underlyingImage && _underlyingImage.image) {
+                self.underlyingImage.image = [self decodedImageWithImage: self.underlyingImage.image];
             }
             
-            if (_underlyingImage || self.animatedImage) {
+            if (_underlyingImage) {
                 [self performSelectorOnMainThread:@selector(imageLoadingComplete) withObject:nil waitUntilDone:NO];
             }
         }
@@ -279,26 +281,15 @@ caption = _caption;
                                                         object:self];
 }
 
-- (UIImage *)imageIfLoaded {
+- (IDMPhotoImage *)imageIfLoaded {
     // Get image or obtain in background
     if ([self underlyingImage]) {
         return [self underlyingImage];
-    } else if (![self animatedImage]) {
+    } else {
         [self loadUnderlyingImageAndNotify];
         if ([self respondsToSelector:@selector(placeholderImage)]) {
             return [self placeholderImage];
         }
-    }
-    
-    return nil;
-}
-
-- (FLAnimatedImage *)animatedImageIfLoaded {
-    // Get image or obtain in background
-    if ([self animatedImage]) {
-        return [self animatedImage];
-    } else if (![self underlyingImage]) {
-        [self loadUnderlyingImageAndNotify];
     }
     
     return nil;

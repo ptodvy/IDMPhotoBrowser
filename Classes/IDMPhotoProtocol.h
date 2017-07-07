@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "IDMPBConstants.h"
-#import <SDWebImage/FLAnimatedImageView+WebCache.h>
+#import "IDMPhotoImage.h"
 
 // Name of notification used when a photo has completed loading process
 // Used to notify browser display the image
@@ -32,7 +32,7 @@
 // fetching of images from any external of source. That should be handled
 // in -loadUnderlyingImageAndNotify: which may be called by the photo browser if this
 // methods returns nil.
-- (UIImage *)underlyingImage;
+- (IDMPhotoImage *)underlyingImage;
 
 // Called when the browser has determined the underlying images is not
 // already loaded into memory but needs it.
@@ -52,12 +52,8 @@
 // as long as the image can be re-loaded (from cache, file, or URL)
 - (void)unloadUnderlyingImage;
 
-- (FLAnimatedImage *)animatedImage;
+- (IDMPhotoImage *)imageIfLoaded;
 
-- (UIImage *)imageIfLoaded;
-
-- (FLAnimatedImage *)animatedImageIfLoaded;
-    
 @optional
 
 // Return a caption string to be displayed over the image
@@ -66,6 +62,6 @@
 
 // Return placeholder UIImage to be displayed while loading underlyingImage
 // Return nil if there is no placeholder
-- (UIImage *)placeholderImage;
+- (IDMPhotoImage *)placeholderImage;
 
 @end

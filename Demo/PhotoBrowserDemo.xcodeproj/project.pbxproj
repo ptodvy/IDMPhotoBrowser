@@ -23,6 +23,7 @@
 		5736E0DD544CC84515494E76 /* libPods-PhotoBrowserDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64F5714840012BFE47F8331B /* libPods-PhotoBrowserDemo.a */; };
 		727988B1187B3B5400966C66 /* IDMPBLocalizations.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 727988B0187B3B5400966C66 /* IDMPBLocalizations.bundle */; };
 		727988B7187B3CF100966C66 /* IDMPhotoBrowser.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 727988B6187B3CF100966C66 /* IDMPhotoBrowser.podspec */; };
+		A990993E1F0F7B40002A7483 /* IDMPhotoImage.m in Sources */ = {isa = PBXBuildFile; fileRef = A990993D1F0F7B40002A7483 /* IDMPhotoImage.m */; };
 		D114BB411A32269C00E677FE /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D114BB401A32269C00E677FE /* Launch Screen.xib */; };
 		D1574968178DB94900B0211A /* IDMCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D157494F178DB94900B0211A /* IDMCaptionView.m */; };
 		D1574969178DB94900B0211A /* IDMPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = D1574951178DB94900B0211A /* IDMPhoto.m */; };
@@ -75,6 +76,8 @@
 		64F5714840012BFE47F8331B /* libPods-PhotoBrowserDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PhotoBrowserDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		727988B0187B3B5400966C66 /* IDMPBLocalizations.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IDMPBLocalizations.bundle; sourceTree = "<group>"; };
 		727988B6187B3CF100966C66 /* IDMPhotoBrowser.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = IDMPhotoBrowser.podspec; path = ../../IDMPhotoBrowser.podspec; sourceTree = "<group>"; };
+		A990993C1F0F7B40002A7483 /* IDMPhotoImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDMPhotoImage.h; sourceTree = "<group>"; };
+		A990993D1F0F7B40002A7483 /* IDMPhotoImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDMPhotoImage.m; sourceTree = "<group>"; };
 		D00FA320EEACA8C835D9D626 /* Pods-PhotoBrowserDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoBrowserDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoBrowserDemo/Pods-PhotoBrowserDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		D11464B61802FFC4005B7BC3 /* IDMPBConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IDMPBConstants.h; sourceTree = "<group>"; };
 		D114BB401A32269C00E677FE /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
@@ -242,6 +245,8 @@
 				D11464B61802FFC4005B7BC3 /* IDMPBConstants.h */,
 				D1574950178DB94900B0211A /* IDMPhoto.h */,
 				D1574951178DB94900B0211A /* IDMPhoto.m */,
+				A990993C1F0F7B40002A7483 /* IDMPhotoImage.h */,
+				A990993D1F0F7B40002A7483 /* IDMPhotoImage.m */,
 				D1574953178DB94900B0211A /* IDMPhotoBrowser.h */,
 				D1574954178DB94900B0211A /* IDMPhotoBrowser.m */,
 				D1574955178DB94900B0211A /* IDMPhotoProtocol.h */,
@@ -427,6 +432,7 @@
 				D157496C178DB94900B0211A /* IDMTapDetectingImageView.m in Sources */,
 				D157496D178DB94900B0211A /* IDMTapDetectingView.m in Sources */,
 				D1A9ED521DEB684B00C238DA /* AppDelegate.swift in Sources */,
+				A990993E1F0F7B40002A7483 /* IDMPhotoImage.m in Sources */,
 				D157496E178DB94900B0211A /* IDMZoomingScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

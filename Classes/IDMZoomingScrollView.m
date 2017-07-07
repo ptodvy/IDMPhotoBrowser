@@ -106,47 +106,36 @@
 		self.contentSize = CGSizeMake(0, 0);
 		
 		// Get image from browser as it handles ordering of fetching
-        UIImage *img = [_photo imageIfLoaded];
-        FLAnimatedImage *animatedImage = [_photo animatedImageIfLoaded];
-        
-		if (img) {
+        IDMPhotoImage *img = [_photo imageIfLoaded];
+
+		if (img && (img.image || img.animatedImage)) {
             // Hide ProgressView
             //_progressView.alpha = 0.0f;
             [_progressView removeFromSuperview];
             
             // Set image
-			_photoImageView.image = img;
-			_photoImageView.hidden = NO;
+            CGSize size;
             
+            if (img.image) {
+                _photoImageView.image = img.image;
+                size = img.image.size;
+            } else {
+                _photoImageView.animatedImage = img.animatedImage;
+                size = img.animatedImage.size;
+            }
+            
+			_photoImageView.hidden = NO;
+        
             // Setup photo frame
 			CGRect photoImageViewFrame;
 			photoImageViewFrame.origin = CGPointZero;
-			photoImageViewFrame.size = img.size;
+			photoImageViewFrame.size = size;
             
 			_photoImageView.frame = photoImageViewFrame;
 			self.contentSize = photoImageViewFrame.size;
 
 			// Set zoom to minimum zoom
 			[self setMaxMinZoomScalesForCurrentBounds];
-        } else if (animatedImage) {
-            // Hide ProgressView
-            //_progressView.alpha = 0.0f;
-            [_progressView removeFromSuperview];
-            
-            // Set image
-            _photoImageView.animatedImage = animatedImage;
-            _photoImageView.hidden = NO;
-            
-            // Setup photo frame
-            CGRect photoImageViewFrame;
-            photoImageViewFrame.origin = CGPointZero;
-            photoImageViewFrame.size = animatedImage.size;
-            
-            _photoImageView.frame = photoImageViewFrame;
-            self.contentSize = photoImageViewFrame.size;
-            
-            // Set zoom to minimum zoom
-            [self setMaxMinZoomScalesForCurrentBounds];
         } else {
 			// Hide image view
 			_photoImageView.hidden = YES;
