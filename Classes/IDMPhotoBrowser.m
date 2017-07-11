@@ -281,10 +281,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
     // Gesture Began
     if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateBegan) {
-        if ([_delegate respondsToSelector:@selector(startDraggingPhoto)]) {
-            [_delegate startDraggingPhoto];
-        }
-        
         [self setControlsHidden:YES animated:YES permanent:YES];
 
         firstX = [scrollView center].x;
@@ -294,6 +290,10 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
         _isdraggingPhoto = YES;
 
+        if ([_delegate respondsToSelector:@selector(startDraggingPhoto)]) {
+            [_delegate startDraggingPhoto];
+        }
+        
         [self setNeedsStatusBarAppearanceUpdate];
     }
 
