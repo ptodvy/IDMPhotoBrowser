@@ -301,10 +301,6 @@
 		
 		// Zoom out
 		[self setZoomScale:self.minimumZoomScale animated:YES];
-        
-        if ([_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
-            [_photoBrowser.delegate setControlsHidden:NO animated:YES];
-        }
 	} else {
 		
 		// Zoom in

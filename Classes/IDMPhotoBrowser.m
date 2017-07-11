@@ -281,6 +281,10 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
     // Gesture Began
     if ([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateBegan) {
+        if ([_delegate respondsToSelector:@selector(startDraggingPhoto)]) {
+            [_delegate startDraggingPhoto];
+        }
+        
         [self setControlsHidden:YES animated:YES permanent:YES];
 
         firstX = [scrollView center].x;
@@ -289,11 +293,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         _senderViewForAnimation.hidden = (_currentPageIndex == _initalPageIndex);
 
         _isdraggingPhoto = YES;
-        
-        if ([_delegate respondsToSelector:@selector(startDraggingPhoto)]) {
-            [_delegate startDraggingPhoto];
-        }
-        
+
         [self setNeedsStatusBarAppearanceUpdate];
     }
 
@@ -362,8 +362,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
             [UIView setAnimationDelegate:self];
             [scrollView setCenter:CGPointMake(finalX, finalY)];
             [UIView commitAnimations];
-            
-            [self setControlsHidden:NO animated:YES permanent:YES];
         }
     }
 }
