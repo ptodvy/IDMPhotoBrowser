@@ -22,6 +22,7 @@
 // Private methods and properties
 @interface IDMZoomingScrollView ()
 @property (nonatomic, weak) IDMPhotoBrowser *photoBrowser;
+@property(nonatomic) CGFloat verticalContentRatio;
 - (void)handleSingleTap:(CGPoint)touchPoint;
 - (void)handleDoubleTap:(CGPoint)touchPoint;
 @end
@@ -74,6 +75,8 @@
 		self.showsVerticalScrollIndicator = NO;
 		self.decelerationRate = UIScrollViewDecelerationRateFast;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        _verticalContentRatio = self.frame.size.height / self.frame.size.width;
     }
     
     return self;
@@ -259,6 +262,40 @@
 	// Center
 	if (!CGRectEqualToRect(_photoImageView.frame, frameToCenter))
 		_photoImageView.frame = frameToCenter;
+    
+    _verticalContentRatio = self.frame.size.height / self.frame.size.width;
+}
+
+
+- (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center {
+    CGRect zoomRect = CGRectZero;
+    zoomRect.size.height = [self frame].size.height / scale;
+    zoomRect.size.width = [self frame].size.width / scale;
+    
+    CGSize size = _photoImageView.frame.size;
+    CGFloat ratio = size.height / size.width;
+
+    if ([self frame].size.width < [self frame].size.height && ratio >= _verticalContentRatio) {
+        CGFloat height = size.height;
+        if (height > [self frame].size.height) {
+            height = [self frame].size.height;
+        }
+        
+        CGFloat width = height / ratio;
+        
+        if (width * scale > [self frame].size.width) {
+            zoomRect.origin.x = center.x - ((zoomRect.size.width / 2.0));
+            zoomRect.origin.y = center.y - ((zoomRect.size.height / 2.0));
+        } else {
+            zoomRect.origin.x = [self frame].size.width / 2 - ((zoomRect.size.width / 2.0));
+            zoomRect.origin.y = center.y - ((zoomRect.size.height / 2.0));
+        }
+    } else {
+        zoomRect.origin.x = center.x - ((zoomRect.size.width / 2.0));
+        zoomRect.origin.y = center.y - ((zoomRect.size.height / 2.0));
+    }
+    
+    return zoomRect;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -292,32 +329,30 @@
 }
 
 - (void)handleDoubleTap:(CGPoint)touchPoint {
-	
-	// Cancel any single tap handling
-	[NSObject cancelPreviousPerformRequestsWithTarget:_photoBrowser];
-	
-	// Zoom
-	if (self.zoomScale == self.maximumDoubleTapZoomScale) {
-		
-		// Zoom out
-		[self setZoomScale:self.minimumZoomScale animated:YES];
-	} else {
-		
-		// Zoom in
-		CGSize targetSize = CGSizeMake(self.frame.size.width / self.maximumDoubleTapZoomScale, self.frame.size.height / self.maximumDoubleTapZoomScale);
-		CGPoint targetPoint = CGPointMake(touchPoint.x - targetSize.width / 2, touchPoint.y - targetSize.height / 2);
-		
-		[self zoomToRect:CGRectMake(targetPoint.x, targetPoint.y, targetSize.width, targetSize.height) animated:YES];
-		
-        if ([_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
-            [_photoBrowser.delegate setControlsHidden:YES animated:YES];
-        }
-	}
-	
-	// Delay controls
+    IDMPhotoImage *img = [_photo underlyingImage];
     
-    if (![_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
-        [_photoBrowser hideControlsAfterDelay];
+    if (img && (img.image || img.animatedImage)) {
+        
+        // Cancel any single tap handling
+        [NSObject cancelPreviousPerformRequestsWithTarget:_photoBrowser];
+        
+        // Zoom
+        if (self.zoomScale > self.minimumZoomScale) {
+            // Zoom out
+            [self setZoomScale:self.minimumZoomScale animated:YES];
+        } else {
+            // Zoom in
+            [self zoomToRect:[self zoomRectForScale:2.8f withCenter:touchPoint] animated:YES];
+            
+            if ([_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
+                [_photoBrowser.delegate setControlsHidden:YES animated:YES];
+            }
+        }
+        
+        // Delay controls
+        if (![_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
+            [_photoBrowser hideControlsAfterDelay];
+        }
     }
 }
 
