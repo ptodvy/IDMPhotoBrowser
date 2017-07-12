@@ -207,14 +207,24 @@
 	}
 
 	// Calculate Max Scale Of Double Tap
-	CGFloat maxDoubleTapZoomScale = 4.0 * minScale; // Allow double scale
-    // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
-    // maximum zoom scale to 0.5.
-	if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
-        maxDoubleTapZoomScale = maxDoubleTapZoomScale / [[UIScreen mainScreen] scale];
+    CGFloat maxDoubleTapZoomScale = 0;
+    
+    if (imageSize.width * 4 < imageSize.height) {
+        maxDoubleTapZoomScale = boundsSize.width / imageSize.width;
         
         if (maxDoubleTapZoomScale < minScale) {
             maxDoubleTapZoomScale = minScale * 2;
+        }
+    } else {
+        maxDoubleTapZoomScale = 4.0 * minScale; // Allow double scale
+        // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
+        // maximum zoom scale to 0.5.
+        if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
+            maxDoubleTapZoomScale = maxDoubleTapZoomScale / [[UIScreen mainScreen] scale];
+            
+            if (maxDoubleTapZoomScale < minScale) {
+                maxDoubleTapZoomScale = minScale * 2;
+            }
         }
     }
     
