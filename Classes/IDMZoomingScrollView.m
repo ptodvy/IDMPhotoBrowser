@@ -342,7 +342,7 @@
             [self setZoomScale:self.minimumZoomScale animated:YES];
         } else {
             // Zoom in
-            [self zoomToRect:[self zoomRectForScale:2.8f withCenter:touchPoint] animated:YES];
+            [self zoomToRect:[self zoomRectForScale:self.maximumDoubleTapZoomScale withCenter:touchPoint] animated:YES];
             
             if ([_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
                 [_photoBrowser.delegate setControlsHidden:YES animated:YES];
