@@ -78,6 +78,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 // Private Properties
 @property (nonatomic, strong) UIActionSheet *actionsSheet;
 @property (nonatomic, strong) UIActivityViewController *activityViewController;
+@property (nonatomic, assign) BOOL lastControlsHiddenForSingleTap;
 
 // Private Methods
 
@@ -119,11 +120,11 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
 // Interactions
 - (void)handleSingleTap;
+- (void)handleZoomOut;
 
 // Data
 - (NSUInteger)numberOfPhotos;
 - (id<IDMPhoto>)photoAtIndex:(NSUInteger)index;
-- (UIImage *)imageForPhoto:(id<IDMPhoto>)photo;
 - (void)loadAdjacentPhotosIfNecessary:(id<IDMPhoto>)photo;
 - (void)releaseAllUnderlyingPhotos;
 
@@ -151,7 +152,8 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
     if ((self = [super init])) {
         // Defaults
         self.hidesBottomBarWhenPushed = YES;
-		
+        self.lastControlsHiddenForSingleTap = NO;
+        
         _currentPageIndex = 0;
 		_performingLayout = NO; // Reset on view did appear
 		_rotating = NO;
@@ -1276,12 +1278,20 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 		[self setControlsHidden:YES animated:YES permanent:NO];
 	}
 }
+
 - (void)handleSingleTap {
 	if (_dismissOnTouch) {
 		[self doneButtonPressed:nil];
 	} else {
+        self.lastControlsHiddenForSingleTap = ![self areControlsHidden];
 		[self setControlsHidden:![self areControlsHidden] animated:YES permanent:NO];
 	}
+}
+
+- (void)handleZoomOut {
+    if (self.lastControlsHiddenForSingleTap != [self areControlsHidden]) {
+        [self setControlsHidden:self.lastControlsHiddenForSingleTap animated:YES permanent:NO];
+    }
 }
 
 

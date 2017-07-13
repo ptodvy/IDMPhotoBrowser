@@ -12,10 +12,9 @@
 
 // Declare private methods of browser
 @interface IDMPhotoBrowser ()
-- (UIImage *)imageForPhoto:(id<IDMPhoto>)photo;
 - (void)cancelControlHiding;
 - (void)hideControlsAfterDelay;
-//- (void)toggleControls;
+- (void)handleZoomOut;
 - (void)handleSingleTap;
 @end
 
@@ -350,6 +349,7 @@
         if (self.zoomScale > self.minimumZoomScale) {
             // Zoom out
             [self setZoomScale:self.minimumZoomScale animated:YES];
+            [_photoBrowser handleZoomOut];
         } else {
             // Zoom in
             [self zoomToRect:[self zoomRectForScale:self.maximumDoubleTapZoomScale withCenter:touchPoint] animated:YES];
