@@ -31,6 +31,7 @@
 - (void)setControlsHidden:(BOOL)hidden animated:(BOOL)animated;
 - (void)startDraggingPhoto;
 - (void)stopDraggingPhoto;
+- (void)endSwipe;
 
 
 @end

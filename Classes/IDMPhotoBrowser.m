@@ -1170,6 +1170,10 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 	// Update toolbar when page changes
 	if(! _arrowButtonsChangePhotosAnimated) [self updateToolbar];
+    
+    if ([_delegate respondsToSelector:@selector(endSwipe)]) {
+        [_delegate endSwipe];
+    }
 }
 
 #pragma mark - Toolbar
