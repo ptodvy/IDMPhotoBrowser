@@ -211,7 +211,7 @@
     CGFloat maxDoubleTapZoomScale = 0;
     
     if (letterBoxRatio <= 0.65) {
-        maxDoubleTapZoomScale = imageSize.width > imageSize.height ? boundsSize.height / imageSize.height : boundsSize.width / imageSize.width;
+        maxDoubleTapZoomScale = imageSize.width > imageSize.height ? [UIScreen mainScreen].bounds.size.height / imageSize.height : [UIScreen mainScreen].bounds.size.width / imageSize.width;
         
         if (maxDoubleTapZoomScale < minScale) {
             maxDoubleTapZoomScale = minScale * 2;
