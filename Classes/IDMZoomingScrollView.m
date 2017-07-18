@@ -210,7 +210,7 @@
 	// Calculate Max Scale Of Double Tap
     CGFloat maxDoubleTapZoomScale = 0;
     
-    if (letterBoxRatio <= 0.65) {
+    if (letterBoxRatio <= 0.35) {
         if (imageSize.width > imageSize.height) {
             maxDoubleTapZoomScale =  self.bounds.size.height / imageSize.height;
         } else if (imageSize.width < imageSize.height) {
@@ -222,7 +222,7 @@
                 maxDoubleTapZoomScale =  self.bounds.size.height / imageSize.height;
             }
         }
-
+        
         if (maxDoubleTapZoomScale < minScale) {
             maxDoubleTapZoomScale = minScale * 2;
         }
