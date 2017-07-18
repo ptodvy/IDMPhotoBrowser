@@ -211,8 +211,18 @@
     CGFloat maxDoubleTapZoomScale = 0;
     
     if (letterBoxRatio <= 0.65) {
-        maxDoubleTapZoomScale = imageSize.width > imageSize.height ? self.bounds.size.height / imageSize.height : self.bounds.size.width / imageSize.width;
-        
+        if (imageSize.width > imageSize.height) {
+            maxDoubleTapZoomScale =  self.bounds.size.height / imageSize.height;
+        } else if (imageSize.width < imageSize.height) {
+            maxDoubleTapZoomScale =  self.bounds.size.width / imageSize.width;
+        } else {
+            if (self.bounds.size.width > self.bounds.size.height) {
+                maxDoubleTapZoomScale =  self.bounds.size.width / imageSize.width;
+            } else {
+                maxDoubleTapZoomScale =  self.bounds.size.height / imageSize.height;
+            }
+        }
+
         if (maxDoubleTapZoomScale < minScale) {
             maxDoubleTapZoomScale = minScale * 2;
         }
