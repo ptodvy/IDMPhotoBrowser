@@ -189,10 +189,12 @@
     
 	// If image is smaller than the screen then ensure we show it at
 	// min scale of 1
-	if (xScale > 1 && yScale > 1) {
-		//minScale = 1.0;
+	if (xScale > 4.0 || yScale > 4.0) {
+		minScale = 1.0;
 	}
     
+    CGFloat letterBoxRatio = (imageSize.width * imageSize.height * minScale) / ([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].bounds.size.height);
+
 	// Calculate Max
 	CGFloat maxScale = 4.0; // Allow double scale
     // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
@@ -208,8 +210,8 @@
 	// Calculate Max Scale Of Double Tap
     CGFloat maxDoubleTapZoomScale = 0;
     
-    if (imageSize.width * 4 < imageSize.height) {
-        maxDoubleTapZoomScale = boundsSize.width / imageSize.width;
+    if (letterBoxRatio <= 0.65) {
+        maxDoubleTapZoomScale = imageSize.width > imageSize.height ? boundsSize.height / imageSize.height : boundsSize.width / imageSize.width;
         
         if (maxDoubleTapZoomScale < minScale) {
             maxDoubleTapZoomScale = minScale * 2;
