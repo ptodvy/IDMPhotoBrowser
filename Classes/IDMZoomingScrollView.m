@@ -193,10 +193,10 @@
 		minScale = 1.0;
 	}
     
-    CGFloat letterBoxRatio = (imageSize.width * imageSize.height * minScale) / ([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].bounds.size.height);
+    CGFloat letterBoxRatio = (imageSize.width * minScale * imageSize.height * minScale) / ([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].bounds.size.height);
 
 	// Calculate Max
-	CGFloat maxScale = 4.0; // Allow double scale
+	CGFloat maxScale = 8.0; // Allow four times scale
     // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
     // maximum zoom scale to 0.5.
 	if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
@@ -211,13 +211,13 @@
     CGFloat maxDoubleTapZoomScale = 0;
     
     if (letterBoxRatio <= 0.65) {
-        maxDoubleTapZoomScale = imageSize.width > imageSize.height ? [UIScreen mainScreen].bounds.size.height / imageSize.height : [UIScreen mainScreen].bounds.size.width / imageSize.width;
+        maxDoubleTapZoomScale = imageSize.width > imageSize.height ? self.bounds.size.height / imageSize.height : self.bounds.size.width / imageSize.width;
         
         if (maxDoubleTapZoomScale < minScale) {
             maxDoubleTapZoomScale = minScale * 2;
         }
     } else {
-        maxDoubleTapZoomScale = 4.0 * minScale; // Allow double scale
+        maxDoubleTapZoomScale = 8.0 * minScale; // Allow four times scale
         // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
         // maximum zoom scale to 0.5.
         if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
@@ -280,10 +280,11 @@
 
 - (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center {
     CGRect zoomRect = CGRectZero;
-    zoomRect.size.height = [self frame].size.height / scale;
-    zoomRect.size.width = [self frame].size.width / scale;
-    
     CGSize size = _photoImageView.frame.size;
+    
+    zoomRect.size.height = self.frame.size.height / scale;
+    zoomRect.size.width = self.frame.size.width / scale;
+    
     CGFloat ratio = size.height / size.width;
 
     if ([self frame].size.width < [self frame].size.height && ratio >= _verticalContentRatio) {
