@@ -167,6 +167,16 @@
 #pragma mark - Setup
 
 - (void)setMaxMinZoomScalesForCurrentBounds {
+    CGRect screenBound = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenBound.size.width;
+    CGFloat screenHeight = screenBound.size.height;
+    
+    CGRect rect = _progressView.frame;
+    rect.origin.x = (screenWidth-28.)/2.;
+    rect.origin.y = (screenHeight-28.)/2.;
+    
+    _progressView.frame = rect;
+    
 	// Bail
     IDMPhotoImage *img = [_photo underlyingImage];
     
@@ -289,17 +299,6 @@
 		_photoImageView.frame = frameToCenter;
     
     _verticalContentRatio = self.frame.size.height / self.frame.size.width;
-    
-    CGRect screenBound = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenBound.size.width;
-    CGFloat screenHeight = screenBound.size.height;
-    
-    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeRight) {
-        screenWidth = screenBound.size.height;
-        screenHeight = screenBound.size.width;
-    }
-    
-    _progressView.frame = CGRectMake((screenWidth-28.)/2., (screenHeight-28.)/2, 28.0f, 28.0f);
 }
 
 
