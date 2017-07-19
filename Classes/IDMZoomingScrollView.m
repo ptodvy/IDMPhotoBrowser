@@ -167,20 +167,24 @@
 #pragma mark - Setup
 
 - (void)setMaxMinZoomScalesForCurrentBounds {
-	// Reset
-	self.maximumZoomScale = 1;
-	self.minimumZoomScale = 1;
-	self.zoomScale = 1;
-    
 	// Bail
-	if (_photoImageView.image == nil) return;
+    IDMPhotoImage *img = [_photo underlyingImage];
+    
+    if (!img || (!img.image && !img.animatedImage)) {
+        return;
+    }
     
 	// Sizes
-	CGSize boundsSize = self.bounds.size;
+	CGSize boundsSize = self.frame.size;
 	boundsSize.width -= 0.1;
 	boundsSize.height -= 0.1;
-	
-    CGSize imageSize = _photoImageView.frame.size;
+    CGSize imageSize;
+    
+    if (img.image) {
+        imageSize = img.image.size;
+    } else {
+        imageSize = img.animatedImage.size;
+    }
     
     // Calculate Min
     CGFloat xScale = boundsSize.width / imageSize.width;    // the scale needed to perfectly fit the image width-wise
@@ -212,14 +216,14 @@
     
     if (letterBoxRatio <= 0.35) {
         if (imageSize.width > imageSize.height) {
-            maxDoubleTapZoomScale =  self.bounds.size.height / imageSize.height;
+            maxDoubleTapZoomScale =  boundsSize.height / imageSize.height;
         } else if (imageSize.width < imageSize.height) {
-            maxDoubleTapZoomScale =  self.bounds.size.width / imageSize.width;
+            maxDoubleTapZoomScale =  boundsSize.width / imageSize.width;
         } else {
-            if (self.bounds.size.width > self.bounds.size.height) {
-                maxDoubleTapZoomScale =  self.bounds.size.width / imageSize.width;
+            if (self.bounds.size.width > boundsSize.height) {
+                maxDoubleTapZoomScale =  boundsSize.width / imageSize.width;
             } else {
-                maxDoubleTapZoomScale =  self.bounds.size.height / imageSize.height;
+                maxDoubleTapZoomScale =  boundsSize.height / imageSize.height;
             }
         }
         
