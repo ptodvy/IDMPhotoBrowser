@@ -171,7 +171,11 @@
 	self.zoomScale = 1;
     
 	// Bail
-	if (_photoImageView.image == nil) return;
+    IDMPhotoImage *img = [_photo underlyingImage];
+    
+    if (!img || (!img.image && !img.animatedImage)) {
+        return;
+    }
     
 	// Sizes
 	CGSize boundsSize = self.bounds.size;
