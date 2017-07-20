@@ -52,11 +52,6 @@
         CGFloat screenWidth = screenBound.size.width;
         CGFloat screenHeight = screenBound.size.height;
         
-        if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeLeft || [[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationLandscapeRight) {
-            screenWidth = screenBound.size.height;
-            screenHeight = screenBound.size.width;
-        }
-        
         // Progress view
         _progressView = [[DACircularProgressView alloc] initWithFrame:CGRectMake((screenWidth-28.)/2., (screenHeight-28.)/2, 28.0f, 28.0f)];
         [_progressView setProgress:0.0f];
