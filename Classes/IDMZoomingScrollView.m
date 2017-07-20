@@ -180,9 +180,7 @@
     _progressView.frame = rect;
     
 	// Bail
-    IDMPhotoImage *img = [_photo underlyingImage];
-    
-    if (!img || (!img.image && !img.animatedImage)) {
+    if (!_photoImageView || (!_photoImageView.image && !_photoImageView.animatedImage)) {
         return;
     }
     
@@ -192,10 +190,10 @@
 	boundsSize.height -= 0.1;
     CGSize imageSize;
     
-    if (img.image) {
-        imageSize = img.image.size;
+    if (_photoImageView.image) {
+        imageSize = _photoImageView.image.size;
     } else {
-        imageSize = img.animatedImage.size;
+        imageSize = _photoImageView.animatedImage.size;
     }
     
     // Calculate Min
