@@ -173,9 +173,7 @@
 	self.zoomScale = 1;
     
 	// Bail
-    IDMPhotoImage *img = [_photo underlyingImage];
-    
-    if (!img || (!img.image && !img.animatedImage)) {
+    if (!_photoImageView || (!_photoImageView.image && !_photoImageView.animatedImage)) {
         return;
     }
     
