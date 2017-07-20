@@ -81,6 +81,8 @@
 
 - (void)setPhoto:(id<IDMPhoto>)photo {
     _photoImageView.image = nil; // Release image
+    _photoImageView.animatedImage = nil;
+    
     if (_photo != photo) {
         _photo = photo;
     }

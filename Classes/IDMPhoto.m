@@ -150,6 +150,8 @@ caption = _caption;
                         self.progressUpdateBlock(progress);
                     }
             } completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                self.underlyingImage = [[IDMPhotoImage alloc] init];
+                
                 if ([image isGIF]) {
                     self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
                     self.underlyingImage.image = nil;
