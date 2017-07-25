@@ -142,13 +142,15 @@ caption = _caption;
         } else if (_photoURL) {
             // Load async from web (using SDWebImageManager)
 			
-			[[SDWebImageManager sharedManager] loadImageWithURL:_photoURL options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-				CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
-				
-				if (self.progressUpdateBlock) {
-					self.progressUpdateBlock(progress);
-				}
-            } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+            
+            [[SDWebImageManager sharedManager] downloadImageWithURL:_photoURL options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                    CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
+                    
+                    if (self.progressUpdateBlock) {
+                        self.progressUpdateBlock(progress);
+                    }
+            } completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                self.underlyingImage = [[IDMPhotoImage alloc] init];
                 
                 self.underlyingImage = [[IDMPhotoImage alloc] init];
                 
