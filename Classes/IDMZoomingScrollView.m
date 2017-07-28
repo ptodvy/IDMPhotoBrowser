@@ -236,7 +236,7 @@
             maxDoubleTapZoomScale = minScale * 2;
         }
     } else {
-        maxDoubleTapZoomScale = 8.0 * minScale; // Allow four times scale
+        maxDoubleTapZoomScale = 4.0 * minScale; // Allow four times scale
         // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
         // maximum zoom scale to 0.5.
         if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
