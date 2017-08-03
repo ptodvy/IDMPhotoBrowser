@@ -141,8 +141,7 @@ caption = _caption;
             [self performSelectorInBackground:@selector(loadImageFromFileAsync) withObject:nil];
         } else if (_photoURL) {
             // Load async from web (using SDWebImageManager)
-			
-            
+
             [[SDWebImageManager sharedManager] downloadImageWithURL:_photoURL options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                     CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
                     
@@ -150,8 +149,6 @@ caption = _caption;
                         self.progressUpdateBlock(progress);
                     }
             } completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                self.underlyingImage = [[IDMPhotoImage alloc] init];
-                
                 self.underlyingImage = [[IDMPhotoImage alloc] init];
                 
                 if ([image isGIF]) {

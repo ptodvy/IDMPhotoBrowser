@@ -198,8 +198,13 @@
     
 	// If image is smaller than the screen then ensure we show it at
 	// min scale of 1
-	if (xScale > 4.0 || yScale > 4.0) {
-		minScale = 1.0;
+	if (minScale > 4.0) {
+        
+        if (minScale > 10.0) {
+            minScale = 4.0;
+        } else {
+            minScale = 1.0;
+        }
 	}
     
     CGFloat letterBoxRatio = (imageSize.width * minScale * imageSize.height * minScale) / ([UIScreen mainScreen].bounds.size.width * [UIScreen mainScreen].bounds.size.height);
