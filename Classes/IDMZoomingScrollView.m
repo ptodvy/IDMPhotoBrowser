@@ -216,7 +216,7 @@
 	if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
 		maxScale = maxScale / [[UIScreen mainScreen] scale];
 		
-		if (maxScale < minScale) {
+		if (maxScale <= minScale) {
 			maxScale = minScale * 2;
 		}
 	}
@@ -237,7 +237,7 @@
             }
         }
         
-        if (maxDoubleTapZoomScale < minScale) {
+        if (maxDoubleTapZoomScale <= minScale) {
             maxDoubleTapZoomScale = minScale * 2;
         }
     } else {
@@ -247,7 +247,7 @@
         if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
             maxDoubleTapZoomScale = maxDoubleTapZoomScale / [[UIScreen mainScreen] scale];
             
-            if (maxDoubleTapZoomScale < minScale) {
+            if (maxDoubleTapZoomScale <= minScale) {
                 maxDoubleTapZoomScale = minScale * 2;
             }
         }
