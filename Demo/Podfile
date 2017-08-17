@@ -5,8 +5,8 @@ inhibit_all_warnings!
 
 target "PhotoBrowserDemo" do
 
-pod 'SDWebImage', :git => 'https://github.com/arpeggi/SDWebImage', :tag => '3.8.2.1'
-pod 'SDWebImage/GIF', :git => 'https://github.com/arpeggi/SDWebImage', :tag => '3.8.2.1'
+pod 'SDWebImage'
+pod 'SDWebImage/GIF'
 pod 'DACircularProgress'
 pod 'pop'
 
