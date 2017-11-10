@@ -21,6 +21,7 @@
 // Private methods and properties
 @interface IDMZoomingScrollView ()
 @property (nonatomic, weak) IDMPhotoBrowser *photoBrowser;
+@property (nonatomic, assign) CGFloat lastestZoomScale;
 @property(nonatomic) CGFloat verticalContentRatio;
 - (void)handleSingleTap:(CGPoint)touchPoint;
 - (void)handleDoubleTap:(CGPoint)touchPoint;
@@ -28,12 +29,14 @@
 
 @implementation IDMZoomingScrollView
 
-@synthesize photoImageView = _photoImageView, photoBrowser = _photoBrowser, photo = _photo, captionView = _captionView;
+@synthesize photoImageView = _photoImageView, photoBrowser = _photoBrowser, photo = _photo, captionView = _captionView, lastestZoomScale = _lastestZoomScale;
 
 - (id)initWithPhotoBrowser:(IDMPhotoBrowser *)browser {
     if ((self = [super init])) {
         // Delegate
         self.photoBrowser = browser;
+        
+        _lastestZoomScale = -1;
         
 		// Tap view for background
 		_tapView = [[IDMTapDetectingView alloc] initWithFrame:self.bounds];
@@ -259,7 +262,7 @@
 	// Set
 	self.maximumZoomScale = maxScale;
 	self.minimumZoomScale = minScale;
-	self.zoomScale = minScale;
+	self.zoomScale = _lastestZoomScale == -1 ? minScale : _lastestZoomScale;
 	self.maximumDoubleTapZoomScale = maxDoubleTapZoomScale;
     
 	// Reset position
@@ -376,10 +379,13 @@
         if (self.zoomScale > self.minimumZoomScale) {
             // Zoom out
             [self setZoomScale:self.minimumZoomScale animated:YES];
+            _lastestZoomScale = self.minimumZoomScale;
+            
             [_photoBrowser handleZoomOut];
         } else {
             // Zoom in
             [self zoomToRect:[self zoomRectForScale:self.maximumDoubleTapZoomScale withCenter:touchPoint] animated:YES];
+            _lastestZoomScale = self.maximumDoubleTapZoomScale;
             
             if ([_photoBrowser.delegate respondsToSelector:@selector(setControlsHidden:animated:)]) {
                 [_photoBrowser.delegate setControlsHidden:YES animated:YES];
