@@ -151,7 +151,12 @@ caption = _caption;
                 self.underlyingImage = [[IDMPhotoImage alloc] init];
                 
                 if ([image isGIF]) {
-                    self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+                    if (data == nil) {
+                        self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:[image sd_imageDataAsFormat:SDImageFormatGIF]];
+                    } else {
+                        self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+                    }
+
                     self.underlyingImage.image = nil;
                 } else {
                     self.underlyingImage.animatedImage = nil;
