@@ -7,8 +7,6 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-#import <SDWebImage/SDWebImageCodersManager.h>
-#import <SDWebImage/SDWebImageGIFCoder.h>
 #import "IDMPhotoBrowser.h"
 #import "IDMZoomingScrollView.h"
 
@@ -213,8 +211,6 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
                                                  selector:@selector(handleIDMPhotoLoadingDidEndNotification:)
                                                      name:IDMPhoto_LOADING_DID_END_NOTIFICATION
                                                    object:nil];
-        
-       [[SDWebImageCodersManager sharedInstance] addCoder:[SDWebImageGIFCoder sharedCoder]];
     }
 	
     return self;

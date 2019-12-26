@@ -141,7 +141,7 @@ caption = _caption;
             [self performSelectorInBackground:@selector(loadImageFromFileAsync) withObject:nil];
         } else if (_photoURL) {
             // Load async from web (using SDWebImageManager)
-            [[SDWebImageManager sharedManager] loadImageWithURL:_photoURL options:SDWebImageRetryFailed|SDWebImageQueryDataWhenInMemory|SDWebImageQueryDiskSync progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+            [[SDWebImageManager sharedManager] loadImageWithURL:_photoURL options:SDWebImageRetryFailed|SDWebImageQueryMemoryData|SDWebImageQueryDiskDataSync progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                 CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
                 
                 if (self.progressUpdateBlock) {
@@ -150,7 +150,7 @@ caption = _caption;
             } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
                 self.underlyingImage = [[IDMPhotoImage alloc] init];
                 
-                if ([image isGIF]) {
+                if ([image sd_isAnimated]) {
                     if (data == nil) {
                         self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:[image sd_imageDataAsFormat:SDImageFormatGIF]];
                     } else {
@@ -255,7 +255,7 @@ caption = _caption;
             if (image) {
                 self.underlyingImage = [[IDMPhotoImage alloc] init];
                 
-                if ([image isGIF]) {
+                if ([image sd_isAnimated]) {
                     self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
                     self.underlyingImage.image = nil;
                 } else {

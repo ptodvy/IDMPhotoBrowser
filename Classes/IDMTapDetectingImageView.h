@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <SDWebImage/FLAnimatedImageView+WebCache.h>
+#import <SDWebImageFLPlugin/SDWebImageFLPlugin.h>
 
 @protocol IDMTapDetectingImageViewDelegate;
 
