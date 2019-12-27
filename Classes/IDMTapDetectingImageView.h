@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <SDWebImage/SDWebImage.h>
 
 @protocol IDMTapDetectingImageViewDelegate;
 
