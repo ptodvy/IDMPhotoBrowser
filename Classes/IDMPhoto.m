@@ -141,7 +141,7 @@ caption = _caption;
             [self performSelectorInBackground:@selector(loadImageFromFileAsync) withObject:nil];
         } else if (_photoURL) {
             // Load async from web (using SDWebImageManager)
-            [[SDWebImageManager sharedManager] loadImageWithURL:_photoURL options:SDWebImageRetryFailed|SDWebImageQueryMemoryData|SDWebImageQueryDiskDataSync progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+            [[SDWebImageManager sharedManager] loadImageWithURL:_photoURL options:SDWebImageRetryFailed|SDWebImageQueryMemoryData|SDWebImageQueryMemoryDataSync|SDWebImageQueryDiskDataSync progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
                 CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
                 
                 if (self.progressUpdateBlock) {
