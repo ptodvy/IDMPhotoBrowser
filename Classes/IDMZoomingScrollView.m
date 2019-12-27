@@ -81,7 +81,6 @@
 
 - (void)setPhoto:(id<IDMPhoto>)photo {
     _photoImageView.image = nil; // Release image
-    _photoImageView.animatedImage = nil;
     
     if (_photo != photo) {
         _photo = photo;
@@ -122,7 +121,7 @@
                 _photoImageView.image = img.image;
                 size = img.image.size;
             } else {
-                _photoImageView.animatedImage = img.animatedImage;
+                _photoImageView.image = img.animatedImage;
                 size = img.animatedImage.size;
             }
             
@@ -178,7 +177,7 @@
     _progressView.frame = rect;
     
 	// Bail
-    if (!_photoImageView || (!_photoImageView.image && !_photoImageView.animatedImage)) {
+    if (!_photoImageView || (!_photoImageView.image)) {
         return;
     }
     
@@ -191,7 +190,7 @@
     if (_photoImageView.image) {
         imageSize = _photoImageView.image.size;
     } else {
-        imageSize = _photoImageView.animatedImage.size;
+        imageSize = _photoImageView.image.size;
     }
     
     // Calculate Min

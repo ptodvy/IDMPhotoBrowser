@@ -429,7 +429,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
     UIImage *imageFromView = [scrollView.photo underlyingImage].image;
     if (!imageFromView && [scrollView.photo underlyingImage].animatedImage) {
-        imageFromView = [scrollView.photo underlyingImage].animatedImage.posterImage;
+        imageFromView = [scrollView.photo underlyingImage].animatedImage;
     }
     
     if (!imageFromView && [scrollView.photo respondsToSelector:@selector(placeholderImage)]) {

@@ -154,7 +154,7 @@ caption = _caption;
                     if (data == nil) {
                         self.underlyingImage.image = [SDAnimatedImage imageWithData:[image sd_imageDataAsFormat:SDImageFormatGIF]];
                     } else {
-                        self.underlyingImage.image = [SDAnimatedImage omageWithData:data];
+                        self.underlyingImage.image = [SDAnimatedImage imageWithData:data];
                     }
                 } else {
                     self.underlyingImage.image = image;
