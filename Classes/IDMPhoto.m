@@ -152,14 +152,11 @@ caption = _caption;
                 
                 if ([image sd_isAnimated]) {
                     if (data == nil) {
-                        self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:[image sd_imageDataAsFormat:SDImageFormatGIF]];
+                        self.underlyingImage.image = [SDAnimatedImage imageWithData:[image sd_imageDataAsFormat:SDImageFormatGIF]];
                     } else {
-                        self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
+                        self.underlyingImage.image = [SDAnimatedImage omageWithData:data];
                     }
-
-                    self.underlyingImage.image = nil;
                 } else {
-                    self.underlyingImage.animatedImage = nil;
                     self.underlyingImage.image = image;
                 }
                 
@@ -256,10 +253,8 @@ caption = _caption;
                 self.underlyingImage = [[IDMPhotoImage alloc] init];
                 
                 if ([image sd_isAnimated]) {
-                    self.underlyingImage.animatedImage = [FLAnimatedImage animatedImageWithGIFData:data];
-                    self.underlyingImage.image = nil;
+                    self.underlyingImage.image = [SDAnimatedImage imageWithData:data];
                 } else {
-                    self.underlyingImage.animatedImage = nil;
                     self.underlyingImage.image = image;
                 }
             }

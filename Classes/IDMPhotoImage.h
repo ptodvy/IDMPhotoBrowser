@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <SDWebImageFLPlugin/SDWebImageFLPlugin.h>
+#import <SDWebImage/SDWebImage.h>
 
 @interface IDMPhotoImage : NSObject
 
 @property (nonatomic, strong) UIImage *image;
-@property (nonatomic, strong) FLAnimatedImage *animatedImage;
+@property (nonatomic, strong) SDAnimatedImage *animatedImage;
 
 @end
